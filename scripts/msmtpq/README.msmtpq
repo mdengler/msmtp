@@ -185,6 +185,9 @@ msmtp-queue offers the following options :
 
   msmtp-queue -r -- runs (flushes) all the contents of the queue
 
+  msmtp-queue -Q -- runs (flushes) all the contents of the queue, not printing
+                    anything if the queue is empty
+
   msmtp-queue -R -- sends selected individual mail(s) in the queue
 
   msmtp-queue

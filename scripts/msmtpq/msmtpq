@@ -218,6 +218,7 @@ usage() {        # <-- error msg
       'usage : msmtp-queue functions' ''\
       '        msmtp-queue < op >'\
       '        ops : -r   run (flush) mail queue - all mail in queue'\
+      '              -Q   run (flush) mail queue - all mail in queue (quietly if no mail is to be sent)'\
       '              -R   send selected individual mail(s) in queue'\
       '              -d   display (list) queue contents   (<-- default)'\
       '              -p   purge individual mail(s) from queue'\
@@ -274,8 +275,14 @@ send_queued_mail() {   # <-- mail id
   fi                                                           # (but allow continuation)
 }
 
+## run (flush) queue quietly, like sendmail
+run_queue_sendmail() {                        # run queue
+    run_queue 'sm'
+}
+
 ## run (flush) queue
 run_queue() {    # <- 'sm' mode      # run queue
+  local SENDMAIL_MODE="$1"
   local M LST="$('ls' $Q/*.mail 2>/dev/null)"            # list of mails in queue
   local -i NDX=0
 
@@ -285,9 +292,9 @@ run_queue() {    # <- 'sm' mode      # run queue
       send_queued_mail "$(basename $M .mail)" "$NDX"     # send mail - pass {id} only
     done
   else                               # queue is empty
-    [ -z "$1" ] && \
+    [ -z "$SENDMAIL_MODE" ] && \
       dsp '' 'mail queue is empty (nothing to send)' ''
-  fi                                 # inform user (if not running in sendmail mode)
+  fi                                 # inform user (if not running quietly -- known as 'sendmail mode')
 }
 
 ## display queue contents
@@ -453,7 +460,7 @@ send_mail() {    # <-- all mail args ; mail text via TMP
   if $MSMTP "$@" < "${FQP}.mail" > /dev/null ; then      # send mail using queue .mail fil
     log "mail for [ $* ] : send was successful"          # log it
     'rm' -f ${FQP}.*                 # remove all queue mail files .mail & .msmtp file
-    run_queue 'sm'                   # run/flush any other mails in queue
+    run_queue_sendmail               # run/flush any other mails in queue
   else                               # send failed - the mail stays in the queue
     log "mail for [ $* ] : send was unsuccessful ; msmtp exit code was $?"\
         "enqueued mail as : [ $ID ] ( $* )"    # (queue .mail file is already there)
@@ -483,6 +490,9 @@ else                                 # msmtp-queue - queue management mode
     r)    lock_queue
           run_queue
           lock_queue -u       ;;     # run (flush) the queue
+    Q)    lock_queue
+          run_queue_sendmail
+          lock_queue -u       ;;     # run (flush) the queue (quietly -- known as 'sendmail mode')
     R)    select_mail send    ;;     # send individual mail(s) in queue
     d|'') display_queue       ;;     # display (list) all mail in queue (default)
     p)    select_mail purge   ;;     # purge individual mail(s) from queue
