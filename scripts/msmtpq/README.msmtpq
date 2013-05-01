@@ -101,8 +101,10 @@ set sendmail = "/path/to/msmtpq"
 set sendmail = "EMAIL_CONN_NOTEST=t /path/to/msmtpq"
                  # use queue without a net connection test
 
+set sendmail = "EMAIL_CONN_TEST=nm /path/to/msmtpq"
+                 # use queue with NetworkManager (nm-online) connection test (the default)
 set sendmail = "EMAIL_CONN_TEST=p /path/to/msmtpq"
-                 # use queue with ping connection test (the default)
+                 # use queue with ping connection test
 set sendmail = "EMAIL_CONN_TEST=P /path/to/msmtpq"
                  # use queue with faster ping connection test
                  # (to an IP address, without a DNS lookup)
