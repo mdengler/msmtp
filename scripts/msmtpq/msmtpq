@@ -58,7 +58,7 @@ EMAIL_CONN_TEST=nm
 
 
 dsp() { local L ; for L ; do [ -n "$L" ] && echo "  $L" || echo ; done ; }
-err() { dsp '' "$@" '' ; exit 1 ; }
+err() { dsp '' "$@" '' ; type logger > /dev/null 2>&1  && logger '' "$@" '' ; exit 1 ; }
 
 
 ## ======================================================================================
