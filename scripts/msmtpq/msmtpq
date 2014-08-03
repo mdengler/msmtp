@@ -454,6 +454,7 @@ send_mail() {    # <-- all mail args ; mail text via TMP
     connect_test || {
       log "mail for [ $* ] : couldn't be sent - host not connected"
       enqueue_mail "$@"              # enqueue the mail
+      return 0
     }
   }
 

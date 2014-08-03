@@ -8,7 +8,8 @@ out ; the msmtpq package does queue handling for msmtp according to the
 way the queue is used
 
   msmtpq        accepts mail input from an MUA (e.g. mutt) and sends it
-                directly out via msmtp if possible - or queues it if not
+                directly out via msmtp if network connection is avaliable
+                - or queues it if not
 
   msmtp-queue   is a wrapper script which simply calls msmtpq with the
                 --q-mgmt argument ; it exposes routines for queue
