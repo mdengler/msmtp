@@ -254,7 +254,8 @@ send_queued_mail() {   # <-- mail id
   if [ -f "${FQP}.msmtp" ] ; then    # corresponding .msmtp file found
     [ -z "$EMAIL_CONN_NOTEST" ] && { # connection test
       connect_test || \
-        log "mail [ $2 ] [ $1 ] from queue ; couldn't be sent - host not connected"
+        ( log "mail [ $2 ] [ $1 ] from queue ; couldn't be sent - host not connected" ;
+          return 1 )
     }
 
     if $MSMTP $(< "${FQP}.msmtp") < "${FQP}.mail" ; then       # this mail goes out the door
